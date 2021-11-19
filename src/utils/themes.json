@@ -1,0 +1,14 @@
+{
+  "default": {
+    "colors": {
+      "success": "#03a80f",
+      "danger": "#c72f2a"
+    },
+    "color": "#303030",
+    "bg": "#ededed",
+    "icon": {
+      "color": "#3f3f3f"
+    },
+    "header": {}
+  }
+}
