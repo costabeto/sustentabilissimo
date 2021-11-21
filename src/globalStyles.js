@@ -74,7 +74,17 @@ const GlobalStyle = createGlobalStyle`
 
     section {
       width: 100vw;
-      padding: 16px;      
+      padding: 16px;
+      
+      & > h1 {
+        font-weight: 300;
+        font-size: 2rem;
+      }
+
+      & > p {
+        font-weight: 300;
+        font-size: 1.3rem;
+      }
     }
 
 `;
