@@ -105,7 +105,6 @@ const defaultData = {
 
 const calc = ({ days = 1, data = defaultData }) => {
   const { cityKmL, roadKmL, avgKmDay } = data;
-  console.log('data', data);
 
   const avgKm = days * avgKmDay;
 

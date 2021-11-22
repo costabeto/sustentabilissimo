@@ -12,17 +12,23 @@ const GNV = () => {
   const calc = useCallback(
     async (data) => {
       try {
+        // const notNumber = new RegExp(/[^\d+,?.?\d+]/gi);
         formRef.current.setErrors({});
         const schema = Yup.object().shape({
-          avgKmDay: Yup.number('Este campo aceita apenas números').required(
-            'Campo obrigatório'
-          ),
-          cityKmL: Yup.number('Este campo aceita apenas números').required(
-            'Campo obrigatório'
-          ),
-          roadKmL: Yup.number('Este campo aceita apenas números').required(
-            'Campo obrigatório'
-          ),
+          avgKmDay: Yup.number()
+            .typeError('Apenas números')
+            .positive('Apenas valores positivos')
+            .required('Campo obrigatório'),
+          cityKmL: Yup.number()
+            .typeError('Apenas números')
+            .positive('Apenas valores positivos')
+
+            .required('Campo obrigatório'),
+          roadKmL: Yup.number()
+            .typeError('Apenas números')
+            .positive('Apenas valores positivos')
+
+            .required('Campo obrigatório'),
         });
         await schema.validate(data, {
           abortEarly: false,
@@ -68,7 +74,7 @@ const GNV = () => {
             Quantos Km você percorre com seu carro por dia?
           </label>
           <Input
-            type='number'
+            type='text'
             id='avgKmDay'
             name='avgKmDay'
             placeholder='Km/dia'
@@ -80,7 +86,7 @@ const GNV = () => {
             Quantos Km por dia seu carro faz na cidade?
           </label>
           <Input
-            type='number'
+            type='text'
             id='cityKmL'
             name='cityKmL'
             placeholder='Km/L na cidade'
@@ -91,7 +97,7 @@ const GNV = () => {
             Quantos Km por dia seu carro faz na estrada?
           </label>
           <Input
-            type='number'
+            type='text'
             id='roadKmL'
             name='roadKmL'
             placeholder='Km/L na estrada'

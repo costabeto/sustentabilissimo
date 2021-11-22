@@ -9,9 +9,9 @@ const ResultCard = ({ data }) => {
       <h1>Dias simulados: {simulation.days}</h1>
       <table>
         <thead>
-          <td>Parâmetro</td>
-          <td>Gasolina</td>
-          <td>GNV</td>
+          <th>Parâmetro</th>
+          <th>Gasolina</th>
+          <th>GNV</th>
         </thead>
         <tr>
           <td>Uso</td>
