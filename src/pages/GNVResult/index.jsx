@@ -2,12 +2,14 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Header from '../../components/Header';
 import ResultCard from '../../components/ResultCard';
-import gnvCalc from '../../utils/gnvCalc';
+import gnvCalc, { defaultPrices } from '../../utils/gnvCalc';
 import { Container, Simulation } from './styles';
 
 const GNVResult = () => {
   const history = useHistory();
   const [days, setDays] = useState(1);
+  const [gasolineValue, setGasolineValue] = useState(defaultPrices.gasoline);
+  const [gnvValue, setGnvValue] = useState(defaultPrices.gnv);
 
   const [data, setData] = useState(null);
 
@@ -30,12 +32,17 @@ const GNVResult = () => {
   const simulation = useMemo(() => {
     if (!data) return null;
 
+    const prices = {
+      gasoline: gasolineValue,
+      gnv: gnvValue,
+    };
+
     const results = [
-      gnvCalc({ days: 1, data }),
-      gnvCalc({ days: 7, data }),
-      gnvCalc({ days: 30, data }),
-      gnvCalc({ days: 365, data }),
-      gnvCalc({ days: 2965, data }),
+      gnvCalc({ days: 1, data, prices }),
+      gnvCalc({ days: 7, data, prices }),
+      gnvCalc({ days: 30, data, prices }),
+      gnvCalc({ days: 365, data, prices }),
+      gnvCalc({ days: 2965, data, prices }),
     ];
 
     const formatted = results.map((r) => {
@@ -63,30 +70,35 @@ const GNVResult = () => {
     });
 
     return formatted;
-  }, [data]);
+  }, [data, gasolineValue, gnvValue]);
 
-  function resetDays() {
-    setDays(0);
+  function resetValue(handler) {
+    handler(0);
   }
 
-  function handleChageDays(newDays) {
-    const number = Number(newDays);
+  function handleChageValue({ value, handler }) {
+    const number = Number(value);
 
-    if (!newDays || isNaN(newDays)) return resetDays();
+    if (!value || isNaN(value)) return resetValue(handler);
 
-    if (newDays === days) return resetDays();
+    if (value === days) return resetValue(handler);
 
-    if (newDays < 1) return resetDays();
+    if (value < 1) return resetValue(handler);
 
-    if (String(newDays).length > 10) return resetDays();
+    if (String(value).length > 10) return resetValue(handler);
 
-    setDays(number);
+    handler(number);
   }
 
   const variableSimulation = useMemo(() => {
     if (!data) return null;
 
-    const result = gnvCalc({ days, data });
+    const prices = {
+      gasoline: gasolineValue,
+      gnv: gnvValue,
+    };
+
+    const result = gnvCalc({ days, data, prices });
 
     result.gasoline.city.cost = new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -109,7 +121,7 @@ const GNVResult = () => {
     }).format(result.gnv.road.cost);
 
     return result;
-  }, [data, days]);
+  }, [data, days, gasolineValue, gnvValue]);
 
   return (
     simulation && (
@@ -126,6 +138,31 @@ const GNVResult = () => {
           {data && <p>{data.avgKmDay} Km por dia</p>}
           <p>Veja a diferença que faz o uso do GNV!!</p>
           <p>Mude a quantidade de dias simulados para ver mais valores!</p>
+          <label htmlFor='gasolineValue'>Preço da gasolina</label>
+          <input
+            type='number'
+            id='gasolineValue'
+            name='gasolineValue'
+            placeholder='Preço gasolina'
+            value={gasolineValue}
+            onChange={(e) =>
+              handleChageValue({
+                value: e.target.value,
+                handler: setGasolineValue,
+              })
+            }
+          />
+          <label htmlFor='gnvValue'>Preço do GNV</label>
+          <input
+            type='number'
+            id='gnvValue'
+            name='gnvValue'
+            placeholder='Preço GNV'
+            value={gnvValue}
+            onChange={(e) =>
+              handleChageValue({ value: e.target.value, handler: setGnvValue })
+            }
+          />
           <label htmlFor='days'>Dias usando o carro</label>
           <input
             type='number'
@@ -133,7 +170,9 @@ const GNVResult = () => {
             name='days'
             placeholder='Dias'
             value={days}
-            onChange={(e) => handleChageDays(e.target.value)}
+            onChange={(e) =>
+              handleChageValue({ value: e.target.value, handler: setDays })
+            }
           />
 
           <ResultCard data={variableSimulation} key={days} />

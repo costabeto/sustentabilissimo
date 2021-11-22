@@ -1,4 +1,4 @@
-const constants = {
+export const constants = {
   gasoline: {
     price: 6.9,
     density: 0.75,
@@ -105,7 +105,7 @@ const defaultData = {
   roadKmL: 0,
 };
 
-const defaultPrices = {
+export const defaultPrices = {
   gasoline: constants.gasoline.price,
   gnv: constants.gnv.price,
 };
