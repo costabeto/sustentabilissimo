@@ -7,6 +7,7 @@ import { Container, Simulation } from './styles';
 
 const GNVResult = () => {
   const history = useHistory();
+  const [days, setDays] = useState(1);
 
   const [data, setData] = useState(null);
 
@@ -64,26 +65,93 @@ const GNVResult = () => {
     return formatted;
   }, [data]);
 
+  function resetDays() {
+    setDays(0);
+  }
+
+  function handleChageDays(newDays) {
+    const number = Number(newDays);
+
+    if (!newDays || isNaN(newDays)) return resetDays();
+
+    if (newDays === days) return resetDays();
+
+    if (newDays < 1) return resetDays();
+
+    if (String(newDays).length > 10) return resetDays();
+
+    setDays(number);
+  }
+
+  const variableSimulation = useMemo(() => {
+    if (!data) return null;
+
+    const result = gnvCalc({ days, data });
+
+    result.gasoline.city.cost = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(result.gasoline.city.cost);
+
+    result.gasoline.road.cost = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(result.gasoline.road.cost);
+
+    result.gnv.city.cost = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(result.gnv.city.cost);
+
+    result.gnv.road.cost = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(result.gnv.road.cost);
+
+    return result;
+  }, [data, days]);
+
   return (
-    <Container>
-      <Header />
+    simulation && (
+      <Container>
+        <Header />
+        <section
+          style={{
+            flexDirection: 'column',
+            justifyContent: 'center',
+            display: 'flex',
+          }}
+        >
+          <h1>Simulação de uso do GNV</h1>
+          {data && <p>{data.avgKmDay} Km por dia</p>}
+          <p>Veja a diferença que faz o uso do GNV!!</p>
+          <p>Mude a quantidade de dias simulados para ver mais valores!</p>
+          <label htmlFor='days'>Dias usando o carro</label>
+          <input
+            type='number'
+            id='days'
+            name='days'
+            placeholder='Dias'
+            value={days}
+            onChange={(e) => handleChageDays(e.target.value)}
+          />
 
-      <section>
-        <h1>Simulação de uso do GNV</h1>
-        <p>Veja a diferença que faz o uso do GNV!!</p>
+          <ResultCard data={variableSimulation} key={days} />
+        </section>
 
-        {data && <p>{data.avgKmDay} Km por dia</p>}
+        <section>
+          <h1>Exemplos de simulações</h1>
 
-        <Simulation>
-          {simulation &&
-            simulation.map((s) => <ResultCard data={s} key={s.days} />)}
-        </Simulation>
+          <p>Confira algumas sugestões de simulação.</p>
 
-        <p>Mude a quantidade de dias simulados para ver mais valores!</p>
-        <label htmlFor='days'>Dias usando o carro</label>
-        <input type='number' id='days' name='days' placeholder='Dias' />
-      </section>
-    </Container>
+          <Simulation>
+            {simulation.map((s) => (
+              <ResultCard data={s} key={s.days} />
+            ))}
+          </Simulation>
+        </section>
+      </Container>
+    )
   );
 };
 

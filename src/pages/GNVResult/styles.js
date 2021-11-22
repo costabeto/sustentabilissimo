@@ -23,6 +23,26 @@ export const Container = styled.div`
 
       border-radius: 4px;
     }
+
+    & > input {
+      color: ${({ theme }) => theme.gray};
+      background: #fff;
+      width: 100px;
+
+      border-radius: 4px;
+      padding: 8px;
+      border: none;
+      margin: 8px 0px;
+      font-size: 1.2rem;
+
+      &::placeholder {
+        color: ${({ theme }) => theme.gray};
+      }
+    }
+  }
+
+  & > section:nth-child(3) {
+    padding: 8px;
   }
 
   & > ul {

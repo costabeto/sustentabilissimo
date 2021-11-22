@@ -37,7 +37,7 @@ const gnvConversion = {
   },
 };
 
-const calcGasoline = ({ avgKm, cityKmL, roadKmL }) => {
+const calcGasoline = ({ avgKm, cityKmL, roadKmL, price }) => {
   const cityLiters = getCosume.gasolineLiters({
     avgKm: avgKm,
     kmL: cityKmL,
@@ -51,20 +51,21 @@ const calcGasoline = ({ avgKm, cityKmL, roadKmL }) => {
   const gasoline = {
     city: {
       liters: cityLiters,
-      cost: decimalAdjust(cityLiters * constants.gasoline.price),
+      cost: decimalAdjust(cityLiters * price),
       co2: decimalAdjust(kgCO2perGasolineLiter * avgKm),
     },
     road: {
       liters: roadLiters,
-      cost: decimalAdjust(roadLiters * constants.gasoline.price),
+      cost: decimalAdjust(roadLiters * price),
       co2: decimalAdjust(kgCO2perGasolineLiter * avgKm),
     },
+    price,
   };
 
   return gasoline;
 };
 
-const calcGnv = ({ cityKmL, roadKmL, gasoline, avgKm }) => {
+const calcGnv = ({ cityKmL, roadKmL, gasoline, avgKm, price }) => {
   const gnvKmM3 = {
     city: gnvConversion.gnvM3fromGasolineKmL({
       gasolineKmL: cityKmL,
@@ -80,18 +81,19 @@ const calcGnv = ({ cityKmL, roadKmL, gasoline, avgKm }) => {
   const gnv = {
     city: {
       m3: cityM3,
-      cost: decimalAdjust(cityM3 * constants.gnv.price),
+      cost: decimalAdjust(cityM3 * price),
       co2: gnvConversion.gnvCo2FromGasoline({
         gasolineCo2Emission: gasoline.city.co2,
       }),
     },
     road: {
       m3: roadM3,
-      cost: decimalAdjust(roadM3 * constants.gnv.price),
+      cost: decimalAdjust(roadM3 * price),
       co2: gnvConversion.gnvCo2FromGasoline({
         gasolineCo2Emission: gasoline.road.co2,
       }),
     },
+    price,
   };
 
   return gnv;
@@ -103,7 +105,12 @@ const defaultData = {
   roadKmL: 0,
 };
 
-const calc = ({ days = 1, data = defaultData }) => {
+const defaultPrices = {
+  gasoline: constants.gasoline.price,
+  gnv: constants.gnv.price,
+};
+
+const calc = ({ days = 1, data = defaultData, prices = defaultPrices }) => {
   const { cityKmL, roadKmL, avgKmDay } = data;
 
   const avgKm = days * avgKmDay;
@@ -113,9 +120,17 @@ const calc = ({ days = 1, data = defaultData }) => {
     cityKmL,
     roadKmL,
     days,
+    price: prices.gasoline,
   });
 
-  const gnv = calcGnv({ avgKm, days, cityKmL, roadKmL, gasoline });
+  const gnv = calcGnv({
+    avgKm,
+    days,
+    cityKmL,
+    roadKmL,
+    gasoline,
+    price: prices.gnv,
+  });
 
   return { gasoline, gnv, days };
 };
