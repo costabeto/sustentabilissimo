@@ -4,10 +4,16 @@ import { Form as Unform } from '@unform/web';
 
 export const Container = styled(Unform)`
   width: 100vw;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: flex-start;
+`;
+
+export const Content = styled.div`
+  width: 100%;
+  margin-bottom: 16px;
 
   & > section {
     padding-bottom: 0px;

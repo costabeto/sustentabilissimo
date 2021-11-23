@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 import ResultCard from '../../components/ResultCard';
 import gnvCalc, { defaultPrices } from '../../utils/gnvCalc';
 import { Container, Inputs } from './styles';
@@ -261,6 +262,9 @@ const GNVResult = () => {
     simulation && (
       <Container>
         <Header />
+        <button className='good-button' onClick={() => history.goBack()}>
+          Voltar
+        </button>
         <section>
           <h1>Simulação de uso do GNV</h1>
           {data && <p>{data.avgKmDay} Km por dia</p>}
@@ -328,6 +332,7 @@ const GNVResult = () => {
             <Line options={co2ChartData.options} data={co2ChartData.data} />
           )}
         </section>
+        <Footer />
       </Container>
     )
   );

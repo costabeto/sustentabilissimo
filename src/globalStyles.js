@@ -9,12 +9,16 @@ const GlobalStyle = createGlobalStyle`
       -ms-user-select: none;
       user-select: none;
       font-family: 'Roboto';
+
+    }
+
+    a {
       color: ${(props) => props.theme.color};
 
-    svg {
-        color: ${(props) => props.theme.icon.color}
+        svg {
+            color: ${(props) => props.theme.icon.color}
+        }
     }
-}
 
     *:focus {
       outline: none;
@@ -24,14 +28,23 @@ const GlobalStyle = createGlobalStyle`
       display: none;
 		}
 
+    .good-button{
+      border: none;
+      background-color: #fff;
+      padding: 8px;
+      border-radius: 4px;
+      margin: 8px;
+    }
+
     body,
     html {
       width: 100vw;
+      min-height: 100vh;
       margin: 0px;
       padding: 0px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
       background: ${(props) => props.theme.bg};
       font-size: 16px;;
