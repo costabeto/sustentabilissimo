@@ -82,6 +82,46 @@ export const Container = styled.div`
   }
 `;
 
+export const Inputs = styled.div`
+  width: fit-content;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+
+  & > div {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    margin: 0px 16px;
+  }
+
+  & > div > input {
+    color: ${({ theme }) => theme.gray};
+    background: #fff;
+    width: 100px;
+
+    border-radius: 4px;
+    padding: 8px;
+    border: none;
+    margin: 8px 0px;
+    font-size: 1.2rem;
+
+    &::placeholder {
+      color: ${({ theme }) => theme.gray};
+    }
+  }
+
+  & > div > label {
+    font-size: 1.2rem;
+    font-weight: 300;
+  }
+`;
+
 export const Simulation = styled.div`
   width: 100%;
 
